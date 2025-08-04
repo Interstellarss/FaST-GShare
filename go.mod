@@ -1,4 +1,4 @@
-module github.com/KontonGu/FaST-GShare
+module github.com/Insterstellarss/FaST-GShare
 
 go 1.22.0
 
