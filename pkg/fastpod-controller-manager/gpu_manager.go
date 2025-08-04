@@ -24,7 +24,6 @@ import (
 	"sync"
 
 	fastpodv1 "github.com/KontonGu/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
-	"github.com/KontonGu/FaST-GShare/pkg/libs/bitmap"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -35,13 +34,17 @@ import (
 	"k8s.io/klog/v2"
 )
 
+const (
+	FastGShareShmPrefix = "/dev/shm/fastgpu_"
+)
+
 type PodReq struct {
-	Key           string
-	QtRequest     float64
-	QtLimit       float64
-	SMPartition   int64
-	Memory        int64
-	GPUClientPort int
+	Key         string
+	QtRequest   float64
+	QtLimit     float64
+	SMPartition int64
+	Memory      int64
+	GPUShmPath  string
 }
 
 type GPUDevInfo struct {
@@ -66,8 +69,6 @@ type NodeStatusInfo struct {
 	UUID2GPUType map[string]string
 	// The mapping from vGPU ID (DummyPod GPU) to physical GPU device, eg. dummyPod GPU ->  physical GPU UUID (1-to-1 mapping)
 	vGPUID2GPU map[string]*GPUDevInfo
-	// The port allocator for FaST-Manager gpu clients and the configurator
-	DaemonPortAlloc *bitmap.Bitmap
 }
 
 var (
@@ -82,7 +83,6 @@ var (
 
 var Quantity1 = resource.MustParse("1")
 
-const PortRange int = 1024
 
 func (ctr *Controller) gpuNodeInit() error {
 	var nodes []*corev1.Node
@@ -122,11 +122,8 @@ func (ctr *Controller) gpuNodeInit() error {
 		gpuUuid, _ := dpod.ObjectMeta.Annotations[fastpodv1.FaSTGShareDummyPodUUID]
 		gpuType, _ := dpod.ObjectMeta.Annotations[fastpodv1.FaSTGShareVGPUType]
 		if node, has := nodesInfo[dpod.Spec.NodeName]; !has {
-			pBm := bitmap.NewBitmap(PortRange)
-			pBm.Set(0)
 			node = &NodeStatusInfo{
-				vGPUID2GPU:      make(map[string]*GPUDevInfo),
-				DaemonPortAlloc: pBm,
+				vGPUID2GPU: make(map[string]*GPUDevInfo),
 			}
 			node.vGPUID2GPU[vgpuID] = &GPUDevInfo{
 				GPUType:  gpuType,
@@ -227,16 +224,15 @@ func (ctr *Controller) gpuNodeInit() error {
 			}
 			gpu_info.Usage += quota_req * (float64(sm_partition) / 100.0)
 			gpu_info.Mem += gpu_mem
-			podPort := (*fastpod.Status.GPUClientPort)[pod.ObjectMeta.Name]
+			podShmPath := (*fastpod.Status.GPUShmPath)[pod.ObjectMeta.Name]
 			gpu_info.PodList.PushBack(&PodReq{
-				Key:           fmt.Sprintf("%s/%s", pod.ObjectMeta.Namespace, pod.ObjectMeta.Name),
-				QtRequest:     quota_req,
-				QtLimit:       quota_limit,
-				SMPartition:   sm_partition,
-				Memory:        gpu_mem,
-				GPUClientPort: podPort,
+				Key:         fmt.Sprintf("%s/%s", pod.ObjectMeta.Namespace, pod.ObjectMeta.Name),
+				QtRequest:   quota_req,
+				QtLimit:     quota_limit,
+				SMPartition: sm_partition,
+				Memory:      gpu_mem,
+				GPUShmPath:  podShmPath,
 			})
-			node.DaemonPortAlloc.Set(podPort - GPUClientPortStart)
 
 		}
 
@@ -369,7 +365,7 @@ errCode 3: resource exceed;
 errCode 4: GPU is out of memory
 errCode 5: No enough gpu client ports
 */
-func (ctr *Controller) getGPUDevUUIDAndUpdateConfig(nodeName, vGPUID string, quotaReq, quotaLimit float64, smPartition, gpuMem int64, key string, port *int) (uuid string, errCode int) {
+func (ctr *Controller) getGPUDevUUIDAndUpdateConfig(nodeName, vGPUID string, quotaReq, quotaLimit float64, smPartition, gpuMem int64, key string, shmPath *string) (uuid string, errCode int) {
 	nodesInfoMtx.Lock()
 	defer nodesInfoMtx.Unlock()
 
@@ -405,25 +401,20 @@ func (ctr *Controller) getGPUDevUUIDAndUpdateConfig(nodeName, vGPUID string, quo
 			gpuInfo.UsageMem = tmpMem
 		}
 
-		newPort := node.DaemonPortAlloc.FindFirstUnsetAndSet()
-		if newPort != -1 {
-			*port = newPort + GPUClientPortStart
-		} else {
-			klog.Errorf("Error the ports for gpu clients are full. node=%s.", nodeName)
-			return "", 5
-		}
+		// Generate shared memory path per GPU - all pods using this GPU share the same SHM region
+		*shmPath = fmt.Sprintf("%s%s", FastGShareShmPrefix, vGPUID)
 
 		gpuInfo.PodList.PushBack(&PodReq{
-			Key:           key,
-			QtRequest:     quotaReq,
-			QtLimit:       quotaLimit,
-			SMPartition:   smPartition,
-			Memory:        gpuMem,
-			GPUClientPort: *port,
+			Key:         key,
+			QtRequest:   quotaReq,
+			QtLimit:     quotaLimit,
+			SMPartition: smPartition,
+			Memory:      gpuMem,
+			GPUShmPath:  *shmPath,
 		})
 
 	} else {
-		*port = podreq.GPUClientPort
+		*shmPath = podreq.GPUShmPath
 	}
 
 	ctr.updatePodsGPUConfig(nodeName, gpuInfo.UUID, gpuInfo.PodList)
@@ -460,7 +451,6 @@ func (ctr *Controller) removePodFromList(fastpod *fastpodv1.FaSTPod, pod *corev1
 						gpuInfo.Usage -= podreq.QtRequest * (float64(podreq.SMPartition) / 100.0)
 						ctr.updatePodsGPUConfig(nodeName, uuid, podlist)
 					}
-					node.DaemonPortAlloc.Clear(podreq.GPUClientPort - GPUClientPortStart)
 
 					// currently the release of the physical gpu is disabled, fastgshare manages all the gpus
 					if remove {
@@ -507,7 +497,6 @@ func (ctr *Controller) removeFaSTPodFromList(fastpod *fastpodv1.FaSTPod) {
 						gpu.Usage -= podreqValue.QtRequest * (float64(podreqValue.SMPartition) / 100.0)
 						gpu.UsageMem -= podreqValue.Memory
 						ctr.updatePodsGPUConfig(nodeName, uuid, podlist)
-						node.DaemonPortAlloc.Clear(podreqValue.GPUClientPort - GPUClientPortStart)
 						continue
 					}
 				}

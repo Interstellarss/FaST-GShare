@@ -31,7 +31,7 @@ var (
 const (
 	GPUClientsIPFile        = "/fastpod/library/GPUClientsIP.txt"
 	FastSchedulerConfigDir  = "/fastpod/scheduler/config"
-	GPUClientsPortConfigDir = "/fastpod/scheduler/gpu_clients"
+	GPUClientsShmConfigDir  = "/fastpod/scheduler/gpu_clients_shm"
 	HeartbeatItv            = 60
 	MaxConnRetries          = 15
 	RetryItv                = 10
@@ -56,7 +56,7 @@ func Run(deviceCtrManager string) {
 	}
 
 	os.MkdirAll(FastSchedulerConfigDir, os.ModePerm)
-	os.MkdirAll(GPUClientsPortConfigDir, os.ModePerm)
+	os.MkdirAll(GPUClientsShmConfigDir, os.ModePerm)
 
 	klog.Infof("Trying to connet controller-manager....., server IP:Port = %s\n", deviceCtrManager)
 	retryCount := 0
@@ -169,18 +169,18 @@ func handleMsg(msg string) {
 		klog.Errorf("Error Received wrong format of configuration msg: %s\n", validMsg)
 		return
 	}
-	uuid, fastSchedConf, gpuClientsPort := msgParsed[0], msgParsed[1], msgParsed[2]
-	klog.Infof("The gpu confiugration message, uuid=%s, fastSchedConf=%s, gpuClientPort=%s", msgParsed[0], msgParsed[1], msgParsed[2])
+	uuid, fastSchedConf, gpuClientsShmPaths := msgParsed[0], msgParsed[1], msgParsed[2]
+	klog.Infof("The gpu configuration message, uuid=%s, fastSchedConf=%s, gpuClientsShmPaths=%s", msgParsed[0], msgParsed[1], msgParsed[2])
 	confPath := filepath.Join(FastSchedulerConfigDir, uuid)
 	confFile, err := os.Create(confPath)
 	if err != nil {
 		klog.Errorf("Error failed to create the fast scheduler resource configuration file: %s\n.", confPath)
 	}
 
-	gcPortFilePath := filepath.Join(GPUClientsPortConfigDir, uuid)
-	gcPortFile, err := os.Create(gcPortFilePath)
+	gcShmFilePath := filepath.Join(GPUClientsShmConfigDir, uuid)
+	gcShmFile, err := os.Create(gcShmFilePath)
 	if err != nil {
-		klog.Errorf("Error failed to create the gpu clients' port configuration file: %s\n.", gcPortFilePath)
+		klog.Errorf("Error failed to create the gpu clients' shared memory configuration file: %s\n.", gcShmFilePath)
 	}
 
 	confFile.WriteString(fmt.Sprintf("%d\n", strings.Count(fastSchedConf, ",")))
@@ -188,8 +188,8 @@ func handleMsg(msg string) {
 	confFile.Sync()
 	confFile.Close()
 
-	gcPortFile.WriteString(fmt.Sprintf("%d\n", strings.Count(gpuClientsPort, ",")))
-	gcPortFile.WriteString(strings.ReplaceAll(gpuClientsPort, ",", "\n"))
-	gcPortFile.Sync()
-	gcPortFile.Close()
+	gcShmFile.WriteString(fmt.Sprintf("%d\n", strings.Count(gpuClientsShmPaths, ",")))
+	gcShmFile.WriteString(strings.ReplaceAll(gpuClientsShmPaths, ",", "\n"))
+	gcShmFile.Sync()
+	gcShmFile.Close()
 }

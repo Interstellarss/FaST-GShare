@@ -173,14 +173,11 @@ func (ctr *Controller) initNodeInfo(conn net.Conn) {
 	// update nodesInfo and create dummyPod
 	nodesInfoMtx.Lock()
 	if node, has := nodesInfo[nodeName]; !has {
-		pBm := bitmap.NewBitmap(PortRange)
-		pBm.Set(0)
 		node = &NodeStatusInfo{
-			vGPUID2GPU:      make(map[string]*GPUDevInfo),
-			UUID2SchedPort:  uuid2port,
-			UUID2GPUType:    uuid2type,
-			DaemonIP:        nodeIP,
-			DaemonPortAlloc: pBm,
+			vGPUID2GPU:     make(map[string]*GPUDevInfo),
+			UUID2SchedPort: uuid2port,
+			UUID2GPUType:   uuid2type,
+			DaemonIP:       nodeIP,
 		}
 		for _, uuid := range uuidList {
 			vgpuID := fastpodv1.GenerateGPUID(8)
@@ -345,12 +342,12 @@ func (ctr *Controller) updatePodsGPUConfig(nodeName, uuid string, podlist *list.
 		}
 	}
 	buf.WriteString(":")
-	// write gpu clients' ports
+	// write gpu clients' shared memory paths
 	if podlist != nil {
 		for pod := podlist.Front(); pod != nil; pod = pod.Next() {
 			buf.WriteString(pod.Value.(*PodReq).Key) // pod's namespace + name
 			buf.WriteString(" ")
-			buf.WriteString(fmt.Sprintf("%d", pod.Value.(*PodReq).GPUClientPort))
+			buf.WriteString(pod.Value.(*PodReq).GPUShmPath)
 			buf.WriteString(",")
 		}
 	}

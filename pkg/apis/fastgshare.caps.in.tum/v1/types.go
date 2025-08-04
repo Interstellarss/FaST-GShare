@@ -99,8 +99,8 @@ type FaSTPodStatus struct {
 	//+optional
 	BoundDeviceType *map[string]string `json:"boundDeviceType,omitempty"`
 
-	//pod to corresponding gpu client port
-	GPUClientPort *map[string]int `json:"GPUClientPort,omitempty"`
+	//pod to corresponding gpu client shared memory path
+	GPUShmPath *map[string]string `json:"GPUShmPath,omitempty"`
 
 	//TODOs: add replicas spec for faas
 	// +optional

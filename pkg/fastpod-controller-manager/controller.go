@@ -351,9 +351,9 @@ func (ctr *Controller) syncHandler(key string) error {
 		fastpodCopy.Status.Pod2Node = &pod2Node
 	}
 
-	if fastpodCopy.Status.GPUClientPort == nil {
-		gpuclientPort := make(map[string]int)
-		fastpodCopy.Status.GPUClientPort = &gpuclientPort
+	if fastpodCopy.Status.GPUShmPath == nil {
+		gpuShmPath := make(map[string]string)
+		fastpodCopy.Status.GPUShmPath = &gpuShmPath
 	}
 
 	if fastpodCopy.Status.Usage == nil {
@@ -501,7 +501,7 @@ func (ctr *Controller) reconcileReplicas(ctx context.Context, existedPods []*cor
 			gpuMem := int64(0)
 
 			gpuDevUUID := ""
-			gpuClientPort := 0
+			gpuShmPath := ""
 			// check the validity of fastpod resource configuration and get the resource configuration for a pod of FaSTPod
 			if fastpod.ObjectMeta.Annotations[fastpodv1.FaSTGShareGPUQuotaRequest] != "" ||
 				fastpod.ObjectMeta.Annotations[fastpodv1.FaSTGShareGPUQuotaLimit] != "" ||
@@ -586,8 +586,9 @@ func (ctr *Controller) reconcileReplicas(ctx context.Context, existedPods []*cor
 				subpodName = newPodName
 				subpodKey = fmt.Sprintf("%s/%s", fastpodCopy.ObjectMeta.Namespace, subpodName)
 				// get the gpu device uuid and update the pod resource configuration in configurator
-				gpuDevUUID, errCode = ctr.getGPUDevUUIDAndUpdateConfig(schedNode, schedvGPUID, quotaReq, quotaLimit, smPartition, gpuMem, subpodKey, &gpuClientPort)
-				klog.Infof("The pod = %s of FaSTPod %s with vGPUID = %s is bound to device UUID=%s with GPUClientPort=%d.", subpodKey, key, schedvGPUID, gpuDevUUID, gpuClientPort)
+				gpuShmPath = fmt.Sprintf("/dev/shm/fastgshare_%s_%s", fastpodCopy.ObjectMeta.Namespace, subpodName)
+				gpuDevUUID, errCode = ctr.getGPUDevUUIDAndUpdateConfig(schedNode, schedvGPUID, quotaReq, quotaLimit, smPartition, gpuMem, subpodKey, gpuShmPath)
+				klog.Infof("The pod = %s of FaSTPod %s with vGPUID = %s is bound to device UUID=%s with GPUShmPath=%s.", subpodKey, key, schedvGPUID, gpuDevUUID, gpuShmPath)
 
 				// errCode 0: no error
 				// errCode 1: node with nodeName is not initialized
@@ -629,7 +630,7 @@ func (ctr *Controller) reconcileReplicas(ctx context.Context, existedPods []*cor
 			// Create the new pod for the fastpod
 			if node, ok := nodesInfo[schedNode]; ok {
 				klog.Infof("Starting to kube-create a new pod=%s for the fastpod=%s.", subpodName, key)
-				newpod, err := ctr.kubeClient.CoreV1().Pods(fastpodCopy.Namespace).Create(context.TODO(), ctr.newPod(fastpod, false, node.DaemonIP, gpuClientPort, gpuDevUUID, schedNode, schedvGPUID, subpodName), metav1.CreateOptions{})
+				newpod, err := ctr.kubeClient.CoreV1().Pods(fastpodCopy.Namespace).Create(context.TODO(), ctr.newPod(fastpod, false, node.DaemonIP, gpuShmPath, gpuDevUUID, schedNode, schedvGPUID, subpodName), metav1.CreateOptions{})
 				if err != nil {
 					klog.Errorf("Error when creating pod=%s for the FaSTPod=%s/%s.", subpodName, fastpod.Namespace, fastpod.Name)
 					if apierrors.HasStatusCause(err, corev1.NamespaceTerminatingCause) {
@@ -639,7 +640,7 @@ func (ctr *Controller) reconcileReplicas(ctx context.Context, existedPods []*cor
 				}
 				// KONTON_TODO
 				(*fastpod.Status.BoundDeviceIDs)[newpod.Name] = schedvGPUID
-				(*fastpod.Status.GPUClientPort)[newpod.Name] = gpuClientPort
+				(*fastpod.Status.GPUShmPath)[newpod.Name] = gpuShmPath
 				klog.Infof("Finished creating pod = %s.", subpodName)
 				return newpod, err
 			}
@@ -690,7 +691,7 @@ func (ctr *Controller) reconcileReplicas(ctx context.Context, existedPods []*cor
 				}
 				// update the status
 				delete((*targetFastPod.Status.BoundDeviceIDs), targetPod.Name)
-				delete((*targetFastPod.Status.GPUClientPort), targetPod.Name)
+				delete((*targetFastPod.Status.GPUShmPath), targetPod.Name)
 			}(pod, fastpod)
 		}
 		wg.Wait()
@@ -897,7 +898,7 @@ func (ctr *Controller) resourceChanged(obj interface{}) {
 }
 
 // newPod create a new pod specification based on the given information for the FaSTPod
-func (ctr *Controller) newPod(fastpod *fastpodv1.FaSTPod, isWarm bool, schedIP string, gpuClientPort int, boundDevUUID, schedNode, schedvGPUID, podName string) *corev1.Pod {
+func (ctr *Controller) newPod(fastpod *fastpodv1.FaSTPod, isWarm bool, schedIP string, gpuShmPath, boundDevUUID, schedNode, schedvGPUID, podName string) *corev1.Pod {
 	specCopy := fastpod.Spec.PodSpec.DeepCopy()
 	specCopy.NodeName = schedNode
 
@@ -954,8 +955,8 @@ func (ctr *Controller) newPod(fastpod *fastpodv1.FaSTPod, isWarm bool, schedIP s
 				Value: schedIP,
 			},
 			corev1.EnvVar{
-				Name:  "GPU_CLIENT_PORT",
-				Value: fmt.Sprintf("%d", gpuClientPort),
+				Name:  "FAST_SHM_PREFIX",
+				Value: gpuShmPath,
 			},
 			corev1.EnvVar{
 				Name:  "POD_NAME",
