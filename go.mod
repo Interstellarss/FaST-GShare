@@ -5,6 +5,8 @@ go 1.22.0
 toolchain go1.22.5
 
 require (
+	github.com/Interstellarss/FaST-GShare v0.0.0-00010101000000-000000000000
+	github.com/KontonGu/FaST-GShare v0.0.0-20250320210117-30052bfc46f5
 	github.com/NVIDIA/go-nvml v0.12.4-0
 	github.com/gocelery/gocelery v0.0.0-20201111034804-825d89059344
 	github.com/gomodule/redigo v2.0.0+incompatible
@@ -77,7 +79,7 @@ require (
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
-replace github.com/KontonGu/FaST-GShare => ./
+replace github.com/Interstellarss/FaST-GShare => ./
 
 replace k8s.io/kubernetes => k8s.io/kubernetes v1.26.2
 
