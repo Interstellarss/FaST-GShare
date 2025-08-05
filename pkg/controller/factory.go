@@ -18,7 +18,7 @@ limitations under the License.
 package controller
 
 import (
-	"github.com/KontonGu/FaST-GShare/pkg/customized_openfaas/k8s"
+	"github.com/Interstellarss/FaST-GShare/pkg/customized_openfaas/k8s"
 	"k8s.io/client-go/kubernetes"
 )
 

@@ -24,7 +24,7 @@ import (
 	"sync"
 	"time"
 
-	fastlisters "github.com/KontonGu/FaST-GShare/pkg/client/listers/fastgshare.caps.in.tum/v1"
+	fastlisters "github.com/Interstellarss/FaST-GShare/pkg/client/listers/fastgshare.caps.in.tum/v1"
 	"github.com/gocelery/gocelery"
 	"github.com/gomodule/redigo/redis"
 	gcache "github.com/patrickmn/go-cache"

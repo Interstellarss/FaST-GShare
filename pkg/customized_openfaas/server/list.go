@@ -21,9 +21,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	fastpodv1 "github.com/KontonGu/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
-	clientset "github.com/KontonGu/FaST-GShare/pkg/client/clientset/versioned"
-	listers "github.com/KontonGu/FaST-GShare/pkg/client/listers/fastgshare.caps.in.tum/v1"
+	fastpodv1 "github.com/Interstellarss/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
+	clientset "github.com/Interstellarss/FaST-GShare/pkg/client/clientset/versioned"
+	listers "github.com/Interstellarss/FaST-GShare/pkg/client/listers/fastgshare.caps.in.tum/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	klog "k8s.io/klog/v2"
 )

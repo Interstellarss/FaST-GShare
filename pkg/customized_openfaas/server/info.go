@@ -21,7 +21,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/KontonGu/FaST-GShare/pkg/customized_openfaas/version"
+	"github.com/Interstellarss/FaST-GShare/pkg/customized_openfaas/version"
 	"github.com/openfaas/faas-provider/types"
 	klog "k8s.io/klog/v2"
 )

@@ -22,14 +22,14 @@ import (
 	"log"
 	"time"
 
-	clientset "github.com/Insterstellarss/FaST-GShare/pkg/client/clientset/versioned"
-	informersv1 "github.com/Insterstellarss/FaST-GShare/pkg/client/informers/externalversions/fastgshare.caps.in.tum/v1"
-	"github.com/Insterstellarss/FaST-GShare/pkg/customized_openfaas/server"
+	clientset "github.com/Interstellarss/FaST-GShare/pkg/client/clientset/versioned"
+	informersv1 "github.com/Interstellarss/FaST-GShare/pkg/client/informers/externalversions/fastgshare.caps.in.tum/v1"
+	"github.com/Interstellarss/FaST-GShare/pkg/customized_openfaas/server"
 	gcache "github.com/patrickmn/go-cache"
 
-	"github.com/Insterstellarss/FaST-GShare/pkg/config"
-	"github.com/Insterstellarss/FaST-GShare/pkg/controller"
-	"github.com/Insterstellarss/FaST-GShare/pkg/customized_openfaas/k8s"
+	"github.com/Interstellarss/FaST-GShare/pkg/config"
+	"github.com/Interstellarss/FaST-GShare/pkg/controller"
+	"github.com/Interstellarss/FaST-GShare/pkg/customized_openfaas/k8s"
 	providertypes "github.com/openfaas/faas-provider/types"
 	kubeinformersv1 "k8s.io/client-go/informers/core/v1"
 	"k8s.io/client-go/kubernetes"
@@ -38,7 +38,7 @@ import (
 	klog "k8s.io/klog/v2"
 	"k8s.io/sample-controller/pkg/signals"
 
-	informers "github.com/Insterstellarss/FaST-GShare/pkg/client/informers/externalversions"
+	informers "github.com/Interstellarss/FaST-GShare/pkg/client/informers/externalversions"
 	kubeinformers "k8s.io/client-go/informers"
 )
 

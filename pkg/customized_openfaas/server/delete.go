@@ -22,7 +22,7 @@ import (
 	"io"
 	"net/http"
 
-	clientset "github.com/KontonGu/FaST-GShare/pkg/client/clientset/versioned"
+	clientset "github.com/Interstellarss/FaST-GShare/pkg/client/clientset/versioned"
 	"github.com/openfaas/faas-provider/types"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/klog/v2"

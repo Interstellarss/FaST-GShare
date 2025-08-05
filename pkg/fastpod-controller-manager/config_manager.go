@@ -28,12 +28,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/KontonGu/FaST-GShare/pkg/libs/bitmap"
+	//"github.com/KontonGu/FaST-GShare/pkg/libs/bitmap"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/klog/v2"
 
-	fastpodv1 "github.com/KontonGu/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
+	fastpodv1 "github.com/Interstellarss/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
 )
 
 type NodeStatus string

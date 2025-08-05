@@ -26,11 +26,11 @@ import (
 	"sync"
 	"time"
 
-	fastpodv1 "github.com/KontonGu/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
-	clientset "github.com/KontonGu/FaST-GShare/pkg/client/clientset/versioned"
-	fastpodscheme "github.com/KontonGu/FaST-GShare/pkg/client/clientset/versioned/scheme"
-	informers "github.com/KontonGu/FaST-GShare/pkg/client/informers/externalversions/fastgshare.caps.in.tum/v1"
-	listers "github.com/KontonGu/FaST-GShare/pkg/client/listers/fastgshare.caps.in.tum/v1"
+	fastpodv1 "github.com/Interstellarss/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
+	clientset "github.com/Interstellarss/FaST-GShare/pkg/client/clientset/versioned"
+	fastpodscheme "github.com/Interstellarss/FaST-GShare/pkg/client/clientset/versioned/scheme"
+	informers "github.com/Interstellarss/FaST-GShare/pkg/client/informers/externalversions/fastgshare.caps.in.tum/v1"
+	listers "github.com/Interstellarss/FaST-GShare/pkg/client/listers/fastgshare.caps.in.tum/v1"
 
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"

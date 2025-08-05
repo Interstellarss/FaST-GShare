@@ -2,10 +2,10 @@ module fastpodcontrollermanager
 
 go 1.22.5
 
-replace github.com/KontonGu/FaST-GShare => ../../
+replace github.com/Interstellarss/FaST-GShare => ../../
 
 require (
-	github.com/KontonGu/FaST-GShare v0.0.0-00010101000000-000000000000
+	github.com/Interstellarss/FaST-GShare v0.0.0-00010101000000-000000000000
 	k8s.io/apimachinery v0.26.2
 	k8s.io/client-go v0.26.2
 	k8s.io/klog/v2 v2.130.1

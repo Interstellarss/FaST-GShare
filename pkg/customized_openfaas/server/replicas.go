@@ -23,11 +23,11 @@ import (
 
 	"io"
 
-	fastpodv1 "github.com/KontonGu/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
-	clientset "github.com/KontonGu/FaST-GShare/pkg/client/clientset/versioned"
-	listers "github.com/KontonGu/FaST-GShare/pkg/client/listers/fastgshare.caps.in.tum/v1"
-	faasfastpod "github.com/KontonGu/FaST-GShare/pkg/customized_openfaas/fastpod"
-	"github.com/KontonGu/FaST-GShare/pkg/customized_openfaas/k8s"
+	fastpodv1 "github.com/Interstellarss/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
+	clientset "github.com/Interstellarss/FaST-GShare/pkg/client/clientset/versioned"
+	listers "github.com/Interstellarss/FaST-GShare/pkg/client/listers/fastgshare.caps.in.tum/v1"
+	faasfastpod "github.com/Interstellarss/FaST-GShare/pkg/customized_openfaas/fastpod"
+	"github.com/Interstellarss/FaST-GShare/pkg/customized_openfaas/k8s"
 	"github.com/gorilla/mux"
 	"github.com/openfaas/faas-provider/types"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"

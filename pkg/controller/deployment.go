@@ -20,7 +20,7 @@ package controller
 import (
 	"encoding/json"
 
-	fastpodv1 "github.com/KontonGu/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
+	fastpodv1 "github.com/Interstellarss/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
 	klog "k8s.io/klog/v2"
 )
 

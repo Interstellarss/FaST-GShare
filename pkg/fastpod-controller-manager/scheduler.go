@@ -17,7 +17,7 @@ limitations under the License.
 package fastpodcontrollermanager
 
 import (
-	fastpodv1 "github.com/KontonGu/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
+	fastpodv1 "github.com/Interstellarss/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
 	"k8s.io/klog/v2"
 )
 

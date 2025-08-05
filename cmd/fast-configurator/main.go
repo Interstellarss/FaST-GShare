@@ -4,7 +4,7 @@ import (
 	"flag"
 	"strings"
 
-	fastconfigurator "github.com/KontonGu/FaST-GShare/pkg/fast-configurator"
+	fastconfigurator "github.com/Interstellarss/FaST-GShare/pkg/fast-configurator"
 	"github.com/NVIDIA/go-nvml/pkg/nvml"
 	klog "k8s.io/klog/v2"
 )

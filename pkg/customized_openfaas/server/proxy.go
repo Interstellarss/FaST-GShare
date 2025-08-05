@@ -25,8 +25,8 @@ import (
 	"strings"
 	"time"
 
-	clientset "github.com/KontonGu/FaST-GShare/pkg/client/clientset/versioned"
-	"github.com/KontonGu/FaST-GShare/pkg/customized_openfaas/k8s"
+	clientset "github.com/Interstellarss/FaST-GShare/pkg/client/clientset/versioned"
+	"github.com/Interstellarss/FaST-GShare/pkg/customized_openfaas/k8s"
 	"github.com/gorilla/mux"
 	"github.com/openfaas/faas-provider/httputil"
 	"github.com/openfaas/faas-provider/types"

@@ -23,9 +23,9 @@ import (
 	"io"
 	"net/http"
 
-	fastpodv1 "github.com/KontonGu/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
-	clientset "github.com/KontonGu/FaST-GShare/pkg/client/clientset/versioned"
-	faasfastpod "github.com/KontonGu/FaST-GShare/pkg/customized_openfaas/fastpod"
+	fastpodv1 "github.com/Interstellarss/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
+	clientset "github.com/Interstellarss/FaST-GShare/pkg/client/clientset/versioned"
+	faasfastpod "github.com/Interstellarss/FaST-GShare/pkg/customized_openfaas/fastpod"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
