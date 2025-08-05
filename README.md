@@ -1,4 +1,7 @@
-# FaST-GShare
+This a extended FaST-GShare for Shared-Memory backend.
+
+
+# FaST-GShare (Archive)
 
 ## Introduction
 **FaST-GShare: Enabling Efficient Spatio-Temporal GPU Sharing in Serverless Computing for Deep Learning Inference**. 

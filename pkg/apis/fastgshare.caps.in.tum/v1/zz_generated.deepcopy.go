@@ -151,12 +151,12 @@ func (in *FaSTPodStatus) DeepCopyInto(out *FaSTPodStatus) {
 			}
 		}
 	}
-	if in.GPUClientPort != nil {
-		in, out := &in.GPUClientPort, &out.GPUClientPort
-		*out = new(map[string]int)
+	if in.GPUShmPath != nil {
+		in, out := &in.GPUShmPath, &out.GPUShmPath
+		*out = new(map[string]string)
 		if **in != nil {
 			in, out := *in, *out
-			*out = make(map[string]int, len(*in))
+			*out = make(map[string]string, len(*in))
 			for key, val := range *in {
 				(*out)[key] = val
 			}

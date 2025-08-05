@@ -19,8 +19,8 @@ limitations under the License.
 package fastgshare
 
 import (
-	v1 "github.com/KontonGu/FaST-GShare/pkg/client/informers/externalversions/fastgshare.caps.in.tum/v1"
-	internalinterfaces "github.com/KontonGu/FaST-GShare/pkg/client/informers/externalversions/internalinterfaces"
+	v1 "github.com/Interstellarss/FaST-GShare/pkg/client/informers/externalversions/fastgshare.caps.in.tum/v1"
+	internalinterfaces "github.com/Interstellarss/FaST-GShare/pkg/client/informers/externalversions/internalinterfaces"
 )
 
 // Interface provides access to each of this group's versions.

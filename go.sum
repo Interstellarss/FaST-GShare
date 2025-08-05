@@ -1,5 +1,7 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
+github.com/KontonGu/FaST-GShare v0.0.0-20250320210117-30052bfc46f5 h1:p1EvMyW2CqjVIg5T6Fp/twqmNZ7heg8vly8LSFhA0Jc=
+github.com/KontonGu/FaST-GShare v0.0.0-20250320210117-30052bfc46f5/go.mod h1:BwZ1mZJThaOciGLinN3plsP+s/FZYScTEaOBszlKE1w=
 github.com/NVIDIA/go-nvml v0.12.4-0 h1:4tkbB3pT1O77JGr0gQ6uD8FrsUPqP1A/EOEm2wI1TUg=
 github.com/NVIDIA/go-nvml v0.12.4-0/go.mod h1:8Llmj+1Rr+9VGGwZuRer5N/aCjxGuR5nPb/9ebBiIEQ=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=

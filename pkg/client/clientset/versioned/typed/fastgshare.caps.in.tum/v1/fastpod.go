@@ -22,8 +22,8 @@ import (
 	"context"
 	"time"
 
-	v1 "github.com/KontonGu/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
-	scheme "github.com/KontonGu/FaST-GShare/pkg/client/clientset/versioned/scheme"
+	v1 "github.com/Interstellarss/FaST-GShare/pkg/apis/fastgshare.caps.in.tum/v1"
+	scheme "github.com/Interstellarss/FaST-GShare/pkg/client/clientset/versioned/scheme"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"

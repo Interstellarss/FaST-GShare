@@ -9,7 +9,7 @@ update_crd:
 	bash code-gen.sh
 
 .PHONY: code_gen_crd
-code_frist_gen_crd:
+code_first_gen_crd:
 	cd .. && git clone https://github.com/kubernetes/code-generator.git && cd code-generator && git checkout release-1.23
 	bash code-gen.sh
 

@@ -19,7 +19,7 @@ limitations under the License.
 package fake
 
 import (
-	v1 "github.com/KontonGu/FaST-GShare/pkg/client/clientset/versioned/typed/fastgshare.caps.in.tum/v1"
+	v1 "github.com/Interstellarss/FaST-GShare/pkg/client/clientset/versioned/typed/fastgshare.caps.in.tum/v1"
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
 )
